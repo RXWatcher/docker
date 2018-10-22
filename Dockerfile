@@ -1,25 +1,14 @@
-FROM lsiobase/alpine.nginx:3.7
-MAINTAINER christronyxyocum
+FROM alpine:3.7
+MAINTAINER RXWatcher
 
 # Set version label
 ARG BUILD_DATE
 ARG VERSION
 
-# Install packages
-RUN \
- apk add --no-cache \
-	curl \
-	php7-curl \
-	php7-ldap \
-	php7-pdo_sqlite \
-	php7-sqlite3 \
-	php7-session \
-	php7-zip \
-  mediainfo
+RUN apk add --update python tini
+WORKDIR /config/pgdvs/
 
-# Add local files
-COPY root/ /
-
-# Ports and volumes
-EXPOSE 80
+ENTRYPOINT ["tini", "--", "python", "default.py"]
+CMD ["/config/pgdvs/gdrive.db"]
 VOLUME /config
+EXPOSE 9988
